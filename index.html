@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Портфолио</title>
+<style>
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: #f4f5f7; color: #1d2433; }
+  .gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; text-align: center; }
+  .gate p { max-width: 420px; margin: 0; color: #5b6475; }
+</style>
+</head>
+<body>
+<div class="gate"><p id="msg">Загрузка…</p></div>
+<script>
+addEventListener('hashchange', () => location.reload());
+(async () => {
+  const msg = (t) => { const el = document.getElementById('msg'); if (el) el.textContent = t; };
+  const k = new URLSearchParams(location.hash.slice(1)).get('k');
+  if (!k) { msg('Эта страница открывается только по персональной ссылке.'); return; }
+  const raw = (s) => { s = s.replace(/-/g, '+').replace(/_/g, '/'); s += '==='.slice((s.length + 3) % 4); return Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); };
+  let key;
+  try { key = await crypto.subtle.importKey('raw', raw(k), 'AES-GCM', false, ['decrypt']); }
+  catch (e) { msg('Ссылка неполная. Попросите автора прислать её ещё раз.'); return; }
+  const dec = async (url) => {
+    const buf = new Uint8Array(await (await fetch(url, { cache: 'force-cache' })).arrayBuffer());
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.slice(0, 12) }, key, buf.slice(12));
+  };
+  let html;
+  try { html = new TextDecoder().decode(await dec('d/00.bin')); }
+  catch (e) { msg('Ссылка неполная или устарела. Попросите автора прислать её ещё раз.'); return; }
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  document.title = doc.title;
+  for (const el of doc.head.querySelectorAll('style, link')) document.head.appendChild(document.importNode(el, true));
+  document.documentElement.lang = doc.documentElement.lang || 'ru';
+  for (const a of doc.documentElement.attributes) if (a.name !== 'lang') document.documentElement.setAttribute(a.name, a.value);
+  document.body.replaceWith(document.importNode(doc.body, true));
+  const blobUrl = async (url, type) => URL.createObjectURL(new Blob([await dec(url)], { type }));
+  // картинки и обложки роликов — сразу
+  for (const el of document.querySelectorAll('[data-enc-poster]')) el.poster = await blobUrl(el.dataset.encPoster, el.dataset.encPosterType);
+  for (const el of document.querySelectorAll('img[data-enc-src]')) el.src = await blobUrl(el.dataset.encSrc, el.dataset.encSrcType);
+  // ролики — когда приближаются к экрану
+  const load = async (v) => { if (v.dataset.loaded) return; v.dataset.loaded = '1'; v.src = await blobUrl(v.dataset.encSrc, v.dataset.encSrcType); };
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { io.unobserve(e.target); load(e.target); } }), { rootMargin: '400px' });
+  for (const v of document.querySelectorAll('video[data-enc-src]')) io.observe(v);
+})();
+</script>
+</body>
+</html>
