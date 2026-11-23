@@ -3,49 +3,399 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="referrer" content="no-referrer">
-<title>Портфолио</title>
+<title>Портфолио Никиты Горбачёва</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
 <style>
-  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: #f4f5f7; color: #1d2433; }
-  .gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; text-align: center; }
-  .gate p { max-width: 420px; margin: 0; color: #5b6475; }
+:root {
+  /* Монтажный стол: одна колонка, проекты — дорожки с превью-кадрами, красный — только индикатор записи */
+  --paper: #f4f5f7;
+  --surface: #ffffff;
+  --ink: #15171c;
+  --muted: #5b6270;
+  --line: #dde1e7;
+  --accent: #d93a40;
+  --screen: #14161b;
+  --screen-ink: #c9ced8;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Onest", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e1014;
+    --surface: #161920;
+    --ink: #eceef2;
+    --muted: #9aa2b1;
+    --line: #272c36;
+    --accent: #ff6b6f;
+    --screen: #0a0b0e;
+    --screen-ink: #aeb5c2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e1014;
+  --surface: #161920;
+  --ink: #eceef2;
+  --muted: #9aa2b1;
+  --line: #272c36;
+  --accent: #ff6b6f;
+  --screen: #0a0b0e;
+  --screen-ink: #aeb5c2;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(30px, 5vw, 46px); line-height: 1.1; letter-spacing: -0.01em; }
+h2 { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.25; }
+h3 { font-size: 19px; font-weight: 600; line-height: 1.35; }
+p { margin: 0; max-width: 65ch; }
+ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+li { max-width: 62ch; }
+li::marker { color: var(--muted); }
+
+.mono { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.02em; }
+.muted { color: var(--muted); }
+
+/* Шапка */
+header.hero { padding: 64px 0 40px; display: grid; gap: 20px; border-bottom: 1px solid var(--line); }
+.role { font-size: 20px; font-weight: 500; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--muted); }
+.meta span { display: inline-flex; align-items: center; gap: 8px; }
+.contact { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border: 1px solid var(--ink); border-radius: 8px;
+  text-decoration: none; font-weight: 500; background: var(--surface);
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.lead { font-size: 19px; line-height: 1.55; }
+
+/* Секции */
+section { padding: 48px 0; border-bottom: 1px solid var(--line); display: grid; gap: 28px; }
+.section-head { display: grid; gap: 6px; }
+
+/* Проекты как дорожки */
+.project { display: grid; gap: 24px; padding-left: 20px; border-left: 3px solid var(--ink); }
+.project-head { display: grid; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font-family: var(--font-mono); font-size: 12.5px;
+  padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink);
+}
+.features { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.feature {
+  display: grid; gap: 12px; align-content: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 14px 18px;
+}
+.feature.text-only { grid-column: 1 / -1; padding: 18px; }
+.shot { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); display: block; }
+.feature ul { font-size: 15.5px; }
+.feature .demo { font-size: 14.5px; color: var(--muted); margin: 4px 0 10px; line-height: 1.5; }
+.feature .demo b { color: var(--ink, inherit); font-weight: 600; }
+
+/* Превью-кадр под видео */
+.frame {
+  position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 59px, rgba(255,255,255,0.05) 59px 60px),
+    var(--screen);
+  color: var(--screen-ink);
+  display: grid; place-items: center; text-align: center; padding: 16px;
+}
+.frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.frame .rec {
+  position: absolute; top: 10px; left: 12px; display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.08em; color: var(--screen-ink);
+}
+.frame .rec::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: blink 1.6s steps(2, start) infinite; }
+.frame .tc { position: absolute; bottom: 10px; right: 12px; font-family: var(--font-mono); font-size: 11.5px; }
+.frame .tracks { position: absolute; left: 12px; right: 12px; bottom: 30px; display: grid; gap: 4px; }
+.frame .tracks i { display: block; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.12); }
+.frame .tracks i:nth-child(1) { width: 72%; }
+.frame .tracks i:nth-child(2) { width: 48%; margin-left: 18%; }
+.frame .tracks i:nth-child(3) { width: 88%; }
+.frame .label { font-size: 14px; max-width: 30ch; line-height: 1.4; }
+@keyframes blink { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .frame .rec::before { animation: none; } }
+
+.common { display: grid; gap: 8px; padding: 16px 18px; border-radius: 12px; border: 1px dashed var(--line); }
+
+/* Опыт */
+.jobs { display: grid; gap: 22px; }
+.job { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 8px 28px; }
+.job-when { display: grid; gap: 2px; align-content: start; }
+.job-body { display: grid; gap: 10px; }
+
+/* Процесс с агентами */
+.pipeline { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; counter-reset: step; }
+.pipeline li {
+  counter-increment: step; display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line);
+  font-weight: 500; font-size: 15.5px; max-width: none;
+}
+.pipeline li::before { content: counter(step); font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+/* Стек */
+.stack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 28px; }
+.stack > div { display: grid; gap: 8px; align-content: start; }
+
+footer { padding: 40px 0 64px; display: grid; gap: 14px; }
+
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 16px; }
+  header.hero { padding-top: 40px; }
+  .features, .stack { grid-template-columns: minmax(0, 1fr); }
+  .job { grid-template-columns: minmax(0, 1fr); }
+  .project { padding-left: 14px; }
+}
 </style>
 </head>
 <body>
-<div class="gate"><p id="msg">Загрузка…</p></div>
-<script>
-addEventListener('hashchange', () => location.reload());
-(async () => {
-  const msg = (t) => { const el = document.getElementById('msg'); if (el) el.textContent = t; };
-  const k = new URLSearchParams(location.hash.slice(1)).get('k');
-  if (!k) { msg('Эта страница открывается только по персональной ссылке.'); return; }
-  const raw = (s) => { s = s.replace(/-/g, '+').replace(/_/g, '/'); s += '==='.slice((s.length + 3) % 4); return Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); };
-  let key;
-  try { key = await crypto.subtle.importKey('raw', raw(k), 'AES-GCM', false, ['decrypt']); }
-  catch (e) { msg('Ссылка неполная. Попросите автора прислать её ещё раз.'); return; }
-  const dec = async (url) => {
-    const buf = new Uint8Array(await (await fetch(url, { cache: 'force-cache' })).arrayBuffer());
-    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.slice(0, 12) }, key, buf.slice(12));
-  };
-  let html;
-  try { html = new TextDecoder().decode(await dec('d/00.bin')); }
-  catch (e) { msg('Ссылка неполная или устарела. Попросите автора прислать её ещё раз.'); return; }
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  document.title = doc.title;
-  for (const el of doc.head.querySelectorAll('style, link')) document.head.appendChild(document.importNode(el, true));
-  document.documentElement.lang = doc.documentElement.lang || 'ru';
-  for (const a of doc.documentElement.attributes) if (a.name !== 'lang') document.documentElement.setAttribute(a.name, a.value);
-  document.body.replaceWith(document.importNode(doc.body, true));
-  const blobUrl = async (url, type) => URL.createObjectURL(new Blob([await dec(url)], { type }));
-  // картинки и обложки роликов — сразу
-  for (const el of document.querySelectorAll('[data-enc-poster]')) el.poster = await blobUrl(el.dataset.encPoster, el.dataset.encPosterType);
-  for (const el of document.querySelectorAll('img[data-enc-src]')) el.src = await blobUrl(el.dataset.encSrc, el.dataset.encSrcType);
-  // ролики — когда приближаются к экрану
-  const load = async (v) => { if (v.dataset.loaded) return; v.dataset.loaded = '1'; v.src = await blobUrl(v.dataset.encSrc, v.dataset.encSrcType); };
-  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { io.unobserve(e.target); load(e.target); } }), { rootMargin: '400px' });
-  for (const v of document.querySelectorAll('video[data-enc-src]')) io.observe(v);
-})();
-</script>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Никита Горбачёв</h1>
+  <p class="role">Senior фронтенд-разработчик · Vue, TypeScript</p>
+  <div class="meta">
+    <span>Минск</span>
+    <span>удалённо или офис</span>
+    <span>5 лет 10 месяцев в коммерческой разработке</span>
+  </div>
+  <p class="lead">Беру сложные задачи целиком: от проработки требований и выбора подхода до выпуска в продакшен. Последние годы делаю крупные подсистемы SaaS-продуктов: браузерный видеоредактор, редактор изображений на Canvas, запись экрана и камеры, интерфейс AI-ассистента.</p>
+  <div class="contact">
+    <a class="btn" href="https://t.me/nikimix">Написать в Telegram · @nikimix</a>
+  </div>
+</header>
+
+<section aria-labelledby="projects">
+  <div class="section-head">
+    <h2 id="projects">Проекты</h2>
+    <p class="muted">Stablecode, Senior Frontend-разработчик, с марта 2024. SaaS-продукты для онлайн-образования и управления социальными сетями, фронтенд-команда из 4 разработчиков.</p>
+  </div>
+
+  <article class="project" aria-labelledby="p-sneg">
+    <div class="project-head">
+      <h3 id="p-sneg">Sneg — сервис управления социальными сетями</h3>
+      <p class="muted">Разработка с нуля на Vue 3 и Quasar.</p>
+      <div class="chips"><span class="chip">Vue 3</span><span class="chip">TypeScript</span><span class="chip">Quasar</span><span class="chip">Pinia</span><span class="chip">Konva</span><span class="chip">Canvas</span></div>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <figure class="frame" style="margin:0" data-video="video-editor">
+          <video src="videos/video-editor.mp4" poster="videos/video-editor.jpg" controls muted playsinline preload="metadata" aria-label="Демо: видеоредактор Sneg"></video>
+        </figure>
+        <h3>Видеоредактор в браузере</h3>
+        <p class="demo"><b>В ролике:</b> проект из сцен с видео и анимацией, новая сцена в один клик, фото из стока Pexels прямо на холсте, масштабирование и выравнивание слоя, текстовый слой, готовая анимация «Пружина» в превью.</p>
+        <ul>
+          <li>Выбрал Konva как движок рендеринга, спроектировал и сам реализовал основную часть редактора.</li>
+          <li>Сцены и слои, многослойная композиция и анимация.</li>
+          <li>Синхронизация видео и аудио.</li>
+          <li>Предзагрузка сцен и контроль потребления памяти.</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <figure class="frame" style="margin:0" data-video="image-editor">
+          <video src="videos/image-editor.mp4" poster="videos/image-editor.jpg" controls muted playsinline preload="metadata" aria-label="Демо: редактор изображений Sneg"></video>
+        </figure>
+        <h3>Редактор изображений</h3>
+        <p class="demo"><b>В ролике:</b> пресет размера под пост Instagram, фото из стока Pexels, маска «Арка» в один клик, текстовый слой с подбором размера, шрифта, цвета и выравнивания, ввод текста прямо на холсте, перемещение с направляющими, стикер, панель слоёв, отмена и повтор действий.</p>
+        <ul>
+          <li>Спроектировал и реализовал основную часть редактора на Konva.</li>
+          <li>Слои, маски, фигуры и стикеры.</li>
+          <li>Текст с динамической загрузкой шрифтов.</li>
+          <li>Пресеты размеров под соцсети и маркетплейсы.</li>
+          <li>ИИ-правка картинки по запросу с сохранением версий.</li>
+        </ul>
+      </div>
+      <div class="feature text-only">
+        <h3>Надёжная работа с API</h3>
+        <ul>
+          <li>Механизм обновления токенов при параллельных запросах: повторные запросы больше не конфликтуют.</li>
+          <li>Оптимистичные обновления интерфейса: изменения видны сразу, а устаревшие ответы сервера не перезаписывают актуальное состояние.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="project" aria-labelledby="p-flenski">
+    <div class="project-head">
+      <h3 id="p-flenski">Flenski — платформа для онлайн-курсов и сообществ</h3>
+      <p class="muted">3 500 активных пользователей.</p>
+      <div class="chips"><span class="chip">Vue 2.7 → Vue 3</span><span class="chip">TypeScript</span><span class="chip">Canvas</span><span class="chip">MediaRecorder</span><span class="chip">Web Workers</span></div>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <figure class="frame" style="margin:0" data-video="screen-recording">
+          <video src="videos/screen-recording.mp4" poster="videos/screen-recording.jpg" controls muted playsinline preload="metadata" aria-label="Демо: запись экрана и камеры Flenski"></video>
+        </figure>
+        <h3>Запись экрана и камеры</h3>
+        <p class="demo"><b>В ролике:</b> запуск записи прямо из урока, режимы «Камера», «Экран» и «Экран и камера», сведение экрана и камеры в один кадр, обратный отсчёт, работа в приложении во время записи, превью готового видео с раскадровкой.</p>
+        <ul>
+          <li>Спроектировал и реализовал на MediaRecorder, Canvas и Web Workers.</li>
+          <li>Поддержка разных браузеров.</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <figure class="frame" style="margin:0" data-video="cover-editor">
+          <video src="videos/cover-editor.mp4" poster="videos/cover-editor.jpg" controls muted playsinline preload="metadata" aria-label="Демо: редактор обложек Flenski"></video>
+        </figure>
+        <h3>Редактор обложек на Canvas</h3>
+        <p class="demo"><b>В ролике:</b> готовые шаблоны в 8 стилях, фон из стока Pexels с кадрированием под формат, перерисовка обложки по мере ввода текста, выделение отдельных слов, выравнивание и позиция текста, тень и цвет заголовка.</p>
+        <ul>
+          <li>Сделал редактор обложек на Canvas.</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <figure class="frame" style="margin:0" data-video="ai-assistant">
+          <video src="videos/ai-assistant.mp4" poster="videos/ai-assistant.jpg" controls muted playsinline preload="metadata" aria-label="Демо: интерфейс AI-ассистента Flenski"></video>
+        </figure>
+        <h3>Интерфейс AI-ассистента</h3>
+        <p class="demo"><b>В ролике:</b> боковая панель поверх любой страницы и полноэкранный режим с историей чатов, статус ответа по ходу работы, черновик с подтверждением перед публикацией, шаги выполнения и карточка созданного поста.</p>
+        <ul>
+          <li>Построил интерфейс AI-ассистента.</li>
+          <li>Несколько форматов отображения на единой переиспользуемой логике.</li>
+        </ul>
+      </div>
+      <div class="feature">
+        <h3>Модернизация легаси</h3>
+        <ul>
+          <li>Перевёл около трети проекта с Vue 2.7 на Vue 3.</li>
+          <li>Заменил 23 общих миксина на типизированные composables, перевёл общие компоненты на Composition API и TypeScript.</li>
+          <li>Сделал универсальный механизм подгрузки данных, он работает в 31 списке приложения.</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <div class="common">
+    <h3>В обоих проектах</h3>
+    <ul>
+      <li>Вёл крупные подсистемы целиком: от исследования вариантов и выбора стека до архитектуры и выпуска.</li>
+      <li>Согласовывал интеграции с бэкендом, прорабатывал требования с продуктом и дизайном, проводил code review.</li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="ai">
+  <div class="section-head">
+    <h2 id="ai">Как я работаю с ИИ-агентами</h2>
+    <p class="muted">Выстроил процесс работы с ИИ-агентами (Claude Code) по инженерным принципам: постановка задачи, архитектурные решения и ревью остаются за мной.</p>
+  </div>
+  <ol class="pipeline" aria-label="Этапы задачи">
+    <li>Требования</li>
+    <li>Сравнение подходов</li>
+    <li>Проектирование</li>
+    <li>План</li>
+    <li>Реализация</li>
+    <li>Проверка</li>
+  </ol>
+  <ul>
+    <li>Контракты фиксирую до начала работы, чтобы результат был предсказуемым.</li>
+    <li>Результат проверяется автоматически: линтер, проверка типов, правила проекта, сверка вёрстки с макетом через Playwright.</li>
+    <li>Повторяющиеся замечания ревью превращаю в правила для агентов, дорабатывал общие правила проекта для Claude Code.</li>
+  </ul>
+</section>
+
+<section aria-labelledby="pet">
+  <div class="section-head">
+    <h2 id="pet">Пет-проект</h2>
+    <p class="muted">Сделан с ИИ-агентами: я ставил задачи, принимал решения и проверял результат.</p>
+  </div>
+  <article class="project" aria-labelledby="p-pet">
+    <div class="project-head">
+      <h3 id="p-pet">Hover Translator — расширение для Chrome</h3>
+      <p class="muted">Перевод текста прямо на странице: навести курсор и нажать Shift. Ссылки, выделение и вёрстка сохраняются.</p>
+      <div class="chips"><span class="chip">Manifest V3</span><span class="chip">JavaScript без фреймворков</span><span class="chip">Chrome Translator API</span><span class="chip">DeepL</span><span class="chip">OpenAI</span><span class="chip">Anthropic</span><span class="chip">Chrome DevTools Protocol</span></div>
+    </div>
+    <img class="shot" src="images/hover-translator.jpg" width="1400" height="560" alt="Hover Translator: перевод текста прямо на странице" loading="lazy">
+    <ul>
+      <li>Перевод блока под курсором с сохранением разметки, карточка с переводом рядом с текстом, перевод всей страницы: сначала видимое, остальное по мере прокрутки. Работает в Shadow DOM и во встроенных фреймах.</li>
+      <li>Три способа перевода: встроенный переводчик Chrome прямо на устройстве, DeepL, OpenAI и Anthropic по ключу пользователя. Сохранённые переводы, лимиты расхода и явное согласие на отправку текста.</li>
+      <li>Интерфейс на русском и английском, светлая и тёмная тема.</li>
+      <li>Автотесты: 29 наборов на Chrome DevTools Protocol, включая прогоны на реальных сайтах.</li>
+    </ul>
+    <div class="contact"><a class="btn" href="https://github.com/nikimix/hover-translator">Код на GitHub</a><a class="btn" href="https://nikimix.github.io/hover-translator/">Сайт проекта</a></div>
+  </article>
+</section>
+
+<section aria-labelledby="exp">
+  <div class="section-head">
+    <h2 id="exp">Предыдущий опыт</h2>
+  </div>
+  <div class="jobs">
+    <div class="job">
+      <div class="job-when">
+        <strong>Check-up online</strong>
+        <span class="mono muted">апр 2023 — мар 2024</span>
+      </div>
+      <div class="job-body">
+        <p>Frontend-разработчик. Система управления выездными проверками, отчётностью и задачами.</p>
+        <ul>
+          <li>Оптимизировал загрузку страниц и списков: PageSpeed вырос с 50 до 80, запросов к серверу стало примерно вдвое меньше.</li>
+          <li>Переводил модули с JavaScript на TypeScript и с Vuex на Pinia.</li>
+          <li>Разработал аналитические интерфейсы, модуль планирования проверок и видеоплеер.</li>
+          <li>Покрывал логику unit-тестами на Vitest.</li>
+        </ul>
+        <div class="chips"><span class="chip">Vue 3</span><span class="chip">TypeScript</span><span class="chip">Pinia</span><span class="chip">Vite</span><span class="chip">GraphQL</span><span class="chip">Apollo</span><span class="chip">Vitest</span></div>
+      </div>
+    </div>
+    <div class="job">
+      <div class="job-when">
+        <strong>Belitsoft</strong>
+        <span class="mono muted">фев 2021 — мар 2023</span>
+      </div>
+      <div class="job-body">
+        <p>Frontend-разработчик. Корпоративные веб-приложения и CRM-системы для заказчиков.</p>
+        <ul>
+          <li>Интерфейсы CRM на Vue 2/3, TypeScript и Vuetify: авторизация через JWT и OAuth, формы с валидацией, маршрутизация, пагинация.</li>
+          <li>Корпоративное веб-приложение на React и TypeScript: Redux Toolkit, React Router, формы с валидацией, интеграция с REST API.</li>
+        </ul>
+        <div class="chips"><span class="chip">Vue 2/3</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Vuetify</span><span class="chip">Redux Toolkit</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="stack">
+  <div class="section-head">
+    <h2 id="stack">Стек</h2>
+  </div>
+  <div class="stack">
+    <div><span class="mono muted">Языки и фреймворки</span><div class="chips"><span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">Vue 2.7 / 3</span><span class="chip">Composition API</span><span class="chip">React</span></div></div>
+    <div><span class="mono muted">Состояние и UI</span><div class="chips"><span class="chip">Pinia</span><span class="chip">Vuex</span><span class="chip">Redux Toolkit</span><span class="chip">Quasar</span><span class="chip">Vuetify</span></div></div>
+    <div><span class="mono muted">Графика и медиа</span><div class="chips"><span class="chip">Canvas</span><span class="chip">Konva</span><span class="chip">MediaRecorder</span><span class="chip">Web Workers</span></div></div>
+    <div><span class="mono muted">Данные</span><div class="chips"><span class="chip">REST API</span><span class="chip">WebSocket</span><span class="chip">GraphQL</span><span class="chip">Apollo</span></div></div>
+    <div><span class="mono muted">Сборка и качество</span><div class="chips"><span class="chip">Vite</span><span class="chip">Webpack</span><span class="chip">ESLint</span><span class="chip">Prettier</span><span class="chip">Vitest</span><span class="chip">Playwright</span></div></div>
+    <div><span class="mono muted">Инструменты</span><div class="chips"><span class="chip">Figma</span><span class="chip">Claude Code</span></div></div>
+  </div>
+</section>
+
+<footer>
+  <h2>Связаться</h2>
+  <p>Открыт к удалённой работе, офису и гибридному формату.</p>
+  <div class="contact"><a class="btn" href="https://t.me/nikimix">Telegram · @nikimix</a></div>
+</footer>
+
+</div>
 </body>
 </html>
